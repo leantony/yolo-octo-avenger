@@ -30,6 +30,12 @@
 		@foreach ($snippets as $snippet)
 			<li>
 				{{ HTML::link('snippets/view/'.$snippet->slug, $snippet->name) }}
+				@if (Auth::check()) 
+					- {{ Form::open( ['url'=>'favorites/create', 'class'=>'form']) }}
+						{{ Form::hidden('snippet_id', $snippet->id) }}
+						{{ Form::submit('fave snippet')}}
+						{{ Form::close() }}
+				@endif
 			</li>
 		@endforeach
 	</ul>

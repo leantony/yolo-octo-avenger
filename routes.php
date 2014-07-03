@@ -16,3 +16,4 @@ Route::get('/', [ 'uses'=> 'SnippetsController@getIndex']);
 
 Route::controller('users', 'UsersController');
 Route::controller('snippets', 'SnippetsController');
+Route::controller('favorites', 'FavoritesController');

@@ -30,4 +30,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	];
 
+	// a user can have one or many favorites
+	public function favorites($value='')
+	{
+		return $this->hasMany('Favorite');
+	}
 }

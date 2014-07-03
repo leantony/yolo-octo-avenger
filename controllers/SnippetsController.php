@@ -36,8 +36,8 @@ class SnippetsController extends \BaseController {
 			$snippet->name = Input::get('name');
 			$snippet->code = Input::get('code');
 			$snippet->language = Input::get('lang');
-			// a slug is simply a short name given to an article. so we convert the snippets
-			// name to that
+			// a slug is simply a short name given to an article. so we let the user
+			// use it's slug as a url name for easy access
 			$snippet->slug = Str::slug(Input::get('name'));
 			$snippet->save();
 
@@ -50,6 +50,18 @@ class SnippetsController extends \BaseController {
 			return Redirect::to('snippets/index')
 			->with('message', 'The following errors have occured:')->withErrors($validator)->withInput();  
 		}
+	}
+
+	/**
+	 * allow users to see their/others snippets
+	 * @return Response
+	 */
+	public function getView($slug)
+	{
+		// get the first slug
+		// eeeew just call it url
+		$data = Snippet::where('slug', '=', $slug)->first();
+		$this->layout->content = View::make('snippets.view')->with('snippet', $data);
 	}
 
 }

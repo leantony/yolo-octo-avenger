@@ -11,4 +11,11 @@ class Snippet extends \Eloquent {
 		'code'=>'required',
 		'lang'=>'required|in:php,js,ruby,python'
 	];
+
+	// defines the inverse of the code-snippet relationship
+	// a snippet can have one or many favorites
+	public function favorites()
+	{
+		return $this->hasMany('Favorite');
+	}
 }
