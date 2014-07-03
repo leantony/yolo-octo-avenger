@@ -2,7 +2,8 @@
 
 class BaseController extends Controller {
 
-	protected $layout = 'layouts.main';
+	protected $layout = 'layouts.newlayout';
+	protected $errormsg = "please fix the following errors in the form";
 	/**
 	 * Setup the layout used by the controller.
 	 *

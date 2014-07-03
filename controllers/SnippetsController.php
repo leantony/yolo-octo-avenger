@@ -44,11 +44,14 @@ class SnippetsController extends \BaseController {
 			//redirect the user to their snippet using the slug
 			$slug = Snippet::where('name', '=', Input::get('name'))->first()->slug;
 
-			return Redirect::to('snippets/view/'.$slug)->with('message', 'your code has been shared');
+			return Redirect::to('snippets/view/'.$slug)
+			->with('message', 'Your code snippet has been successfully saved')->with('alertclass',
+				'alert-success');
 
 		} else {
 			return Redirect::to('snippets/index')
-			->with('message', 'The following errors have occured:')->withErrors($validator)->withInput();  
+			->with('message', $this->errormsg)->with('alertclass', 'alert-danger')
+			->withErrors($validator)->withInput();  
 		}
 	}
 

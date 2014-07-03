@@ -6,7 +6,7 @@ class FavoritesController extends \BaseController {
 	{
 		$this->beforeFilter('csrf', ['on'=>'post']);
 		// protect create & index actions
-		$this->beforeFilter('auth', ['only'=> array('index', 'create')]);
+		//$this->beforeFilter('auth', ['only'=> array('index', 'create')]);
 	}
 	/**
 	 * Display a listing of the resource.
@@ -32,19 +32,30 @@ class FavoritesController extends \BaseController {
 	 */
 	public function postCreate()
 	{
+		$current_user_favorites = User::find(Auth::user()->id)->favorites;
 		// only signed in users can fave snippets
 		if (Auth::check()) {
+
 			$favorite = new Favorite;
 			$favorite->user_id = Auth::user()->id;
 			$favorite->snippet_id = Input::get('snippet_id');
+			// check if the favorite to be marked has already been marked
+			foreach ($current_user_favorites as $favs) {
+				if ($favs->snippet->id === $snippet_id) {
+					return Redirect::to('favorites')->with('message', 'you already have that
+						snippet in your favorites. select another')->with('alertclass',
+				'alert-warning');
+				}
+			}
 			$favorite->save();
 
 			return Redirect::to('favorites')->with('message', 'You\'ve
-				successfully added the code snippet to your favorites');
+				successfully added the code snippet to your favorites')->with('alertclass',
+				'alert-success');
 		} else {
 
-			return Redirect::to('/')->with('message', 'You have to signup/signin
-				to fave a snippet');
+			return Redirect::to('users/signin')->with('message', 'You have to signup/signin
+				to fave a snippet')->with('alertclass', 'alert-warning');
 		}
 	}
 }

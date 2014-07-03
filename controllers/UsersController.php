@@ -33,13 +33,15 @@ class UsersController extends \BaseController {
 			$user->save();
 
 			// we save the user and redirect with a flash msg
-			return Redirect::to('users/signin')->with('message', 'Thanks for signing up');
+			return Redirect::to('users/signin')->with('message', 'Thanks for signing up')
+			->with('alertclass', 'alert-success');
 		}
 		else{
 			// redirect on failure, passing in the errors to the form
 			// then resend user input
 			return Redirect::to('users/signup')
-			->with('message', 'Please fix the following errors')->withErrors($validator)->withInput();
+			->with('message', $this->errormsg)->with('alertclass','alert-danger')
+			->withErrors($validator)->withInput();
 		}
 	}
 
@@ -64,7 +66,9 @@ class UsersController extends \BaseController {
 			return Redirect::to('/')->with('message', 'You\'ve successfully signed in');
 		} else {
 			return Redirect::to('users/signin')
-			->with('message', 'Invalid credentials. try signing in with valid credentials')->withInput();
+			->with('message', 'Invalid credentials. try signing in with valid credentials')
+			->with('alertclass', 'alert-danger')
+			->withInput();
 		}
 	}
 
@@ -76,7 +80,8 @@ class UsersController extends \BaseController {
 	{
 		Auth::logout();
 		return Redirect::to('/')
-			->with('message', 'You\'ve successfully signed out');
+			->with('message', 'You\'ve successfully signed out')
+			->with('alertclass', 'alert-success');
 	}
 
 }
