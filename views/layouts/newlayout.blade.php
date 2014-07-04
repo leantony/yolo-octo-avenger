@@ -9,13 +9,15 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        {{ HTML::style('css/bootstrap3/themes/bootstrap-yeti.css') }} 
+        {{ HTML::style('css/bootstrap3/themes/bootstrap-yeti.css') }}
         <!--{{ HTML::style('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css') }}
-        {{ HTML::style('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css') }}
--->
+        {{ HTML::style('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css')
+}}-->
+
         <style>
             body {
                 padding-top: 0px;
+                margin-top: 50px;
                 padding-bottom: 20px;
                 font-size: 14px;
             }
@@ -27,7 +29,7 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div class="navbar navbar-default">
+        <div class="navbar navbar-default navbar-fixed-top">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
               <span class="icon-bar"></span>
@@ -37,7 +39,7 @@
             <a class="navbar-brand" href="#">CodeShare !!! {{{ '</>'}}}</a>
           </div>
           <div class="navbar-collapse collapse navbar-responsive-collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav nav-pills navbar-default">
               <li>{{ HTML::link('/', 'Home') }}</li>
               @if(!Auth::check())
                 <li>{{ HTML::link('users/signup', 'Sign Up') }}</li>   
@@ -48,32 +50,28 @@
               @endif
             </ul>
             
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Link</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                </ul>
-              </li>
-            </ul>
+            
           </div>
         </div>
 
     <div class="container">
       <!-- Example row of columns -->
         <div class="row">
+        <br>
                 @if(Session::has('message') || Session::has('alertclass'))
                   <div class="alert alert-dismissable {{ Session::get('alertclass')}}">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <button type="button" class="close"
+                    data-dismiss="alert">&times;</button>
                     <strong> {{ Session::get('message') }} </strong>
                   </div>
                 @endif
         </div>
+
+        <!-- <div class="jumbotron">
+          <h1>Jumbotron</h1>
+          <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+          <p><a class="btn btn-primary btn-lg">Learn more</a></p>
+        </div> -->
         <div class="col-lg-12">
           {{ $content }}
         </div>

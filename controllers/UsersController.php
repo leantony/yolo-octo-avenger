@@ -32,8 +32,10 @@ class UsersController extends \BaseController {
 			$user->password = Hash::make(Input::get('password'));
 			$user->save();
 
-			// we save the user and redirect with a flash msg
-			return Redirect::to('users/signin')->with('message', 'Thanks for signing up')
+			// we save the user and sign them in automatically. then redirect em to di
+            // home page
+			Auth::login($user);
+			return Redirect::to('/')->with('message', 'Thanks for signing up')
 			->with('alertclass', 'alert-success');
 		}
 		else{
@@ -60,9 +62,21 @@ class UsersController extends \BaseController {
 	 */
 	public function postSignin()
 	{
+		// check if a user is already signed in
+		if (Auth::check()) 
+		{
+			return Redirect::to('/')->with('message', 'You are already signed in')
+						->with('alertclass', 'alert-info');
+		}
 		$username = Input::get('username');
 		$password = Input::get('password');
-		if (Auth::attempt(['username'=>$username, 'password'=>$password])){
+		if (Input::get('remember') === 'remember') {
+			$remember_me = true;
+		} else {
+			$remember_me = false;
+		}
+		
+		if (Auth::attempt(['username'=>$username, 'password'=>$password], $remember_me)){
 			return Redirect::to('/')->with('message', 'You\'ve successfully signed in');
 		} else {
 			return Redirect::to('users/signin')

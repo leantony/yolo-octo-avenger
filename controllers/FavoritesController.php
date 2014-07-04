@@ -6,7 +6,7 @@ class FavoritesController extends \BaseController {
 	{
 		$this->beforeFilter('csrf', ['on'=>'post']);
 		// protect create & index actions
-		//$this->beforeFilter('auth', ['only'=> array('index', 'create')]);
+		$this->beforeFilter('auth', ['only'=> array('index', 'create')]);
 	}
 	/**
 	 * Display a listing of the resource.
@@ -17,11 +17,19 @@ class FavoritesController extends \BaseController {
 	public function getIndex()
 	{
 		// retrieve all favorite snippets for the current user
-		// $userid = Auth::user()->id;
-		// $username = Auth::user()->username;
-		// $userFavs = User::find($userid)->favorites;
-		$this->layout->content = View::make('favorites.index')->with('favorites',
-			User::find(Auth::user()->id)->favorites);
+		$userid = Auth::user()->id;
+		$username = Auth::user()->username;
+		$userFavsCount = User::find($userid)->favorites->count();
+
+		if (is_null($userFavsCount) || $userFavsCount == 0) {
+			// a user should recieve a msg if they don't have any favorites
+			return Redirect::to('/')->with('message', 'you don\'t seem to have
+				any favorites yet. To mark a snippet as favorite click the \'fave snippet\' button next to the snippet' )->with('alertclass',
+				'alert-warning');
+		} else {
+			$this->layout->content = View::make('favorites.index')->with('favorites',
+				User::find(Auth::user()->id)->favorites)->with('username', $username);
+		}
 	}
 
 	/**
@@ -32,29 +40,33 @@ class FavoritesController extends \BaseController {
 	 */
 	public function postCreate()
 	{
-		$current_user_favorites = User::find(Auth::user()->id)->favorites;
 		// only signed in users can fave snippets
-		if (Auth::check()) {
+		if (Auth::check() || Auth::viaRemember()) {
 
-			$favorite = new Favorite;
-			$favorite->user_id = Auth::user()->id;
+			$favorite             = new Favorite;
+			$favorite->user_id    = Auth::user()->id;
 			$favorite->snippet_id = Input::get('snippet_id');
-			// check if the favorite to be marked has already been marked
-			foreach ($current_user_favorites as $favs) {
-				if ($favs->snippet->id === $snippet_id) {
-					return Redirect::to('favorites')->with('message', 'you already have that
-						snippet in your favorites. select another')->with('alertclass',
-				'alert-warning');
-				}
-			}
-			$favorite->save();
+			// check if the favorite to be marked has already been marked by current usr
+			// SELECT count('snippet_id') as favorite_count FROM `favorites` WHERE user_id = 1 and snippet_id = 1
+			$uniq_fav_count = Favorite::whereRaw('snippet_id = ? and user_id = ?', [$favorite->snippet_id,
+				$favorite->user_id] )->count();
 
-			return Redirect::to('favorites')->with('message', 'You\'ve
+			if ($uniq_fav_count >= 1) {
+				# this one exists so alert user
+				return Redirect::to('favorites')->with('message', 'It seems that you\'ve already
+					marked this snippet as a favorite before. select another')->with('alertclass',
+				'alert-warning');
+			} else {
+				# this one is a new one so save it n redirect
+				$favorite->save();
+				return Redirect::to('favorites/index')->with('message', 'You\'ve
 				successfully added the code snippet to your favorites')->with('alertclass',
 				'alert-success');
+			}
+				
 		} else {
 
-			return Redirect::to('users/signin')->with('message', 'You have to signup/signin
+			return Redirect::intended('users/signin')->with('message', 'You have to signup/signin
 				to fave a snippet')->with('alertclass', 'alert-warning');
 		}
 	}

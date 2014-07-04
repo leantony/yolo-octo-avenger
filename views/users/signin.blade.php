@@ -1,8 +1,3 @@
-<ul>
-  @foreach($errors->all() as $error)
-    <li>{{ $error }}</li>
-  @endforeach
-</ul>
 {{ Form::open(['url'=>'users/signin', 'class'=>'form-horizontal']) }}
 <fieldset>
     <legend>Please signin</legend>
@@ -16,7 +11,11 @@
       {{ Form::label('password', 'Password', array('class' => 'col-lg-2 control-label')) }}
       <div class="col-lg-4">
         {{ Form::password('password', [ 'class'=>'form-control', 'placeholder'=>'enter your password']) }}
-        
+        <div class="checkbox">
+          <label>
+            {{ Form::checkbox('remember', 'remember', true) }} Remmember me
+          </label>
+        </div>
       </div>
     </div>
     <div class="col-lg-4 col-lg-offset-2">

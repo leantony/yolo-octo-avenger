@@ -9,7 +9,7 @@ class Snippet extends \Eloquent {
 	public static $rules = [
 		'name'=>'required|alpha_dash|min:2|unique:snippets',
 		'code'=>'required',
-		'lang'=>'required|in:php,js,ruby,python'
+		'lang'=>'required|in:php,js,ruby,python,html'
 	];
 
 	// defines the inverse of the code-snippet relationship

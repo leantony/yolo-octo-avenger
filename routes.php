@@ -17,3 +17,8 @@ Route::get('/', [ 'uses'=> 'SnippetsController@getIndex']);
 Route::controller('users', 'UsersController');
 Route::controller('snippets', 'SnippetsController');
 Route::controller('favorites', 'FavoritesController');
+
+// Event::listen('illuminate.query', function($sql, $bindings, $times){
+
+// 	var_dump($sql, $bindings, $times);
+// });
