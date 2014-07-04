@@ -1,12 +1,3 @@
-<!-- <ul>
-	@foreach($errors->all() as $error)
-		<li>{{ $error }}</li>
-	@endforeach
-</ul> -->
-<!-- <div class="form-group has-error">
-  <label class="control-label" for="inputError">Input error</label>
-  <input class="form-control" id="inputError" type="text">
-</div> -->
 {{ Form::open(['url'=>'users/signup', 'class'=>'form-horizontal']) }}
 <fieldset>
     <legend>Please signup</legend>
